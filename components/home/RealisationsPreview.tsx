@@ -1,42 +1,30 @@
+import Link from "next/link";
 import { realisations } from "@/data/realisations";
-import { SectionHeader } from "@/components/ui/SectionHeader";
-import { ButtonLink } from "@/components/ui/ButtonLink";
-import { Txt } from "@/components/ui/Txt";
+import { ProjectCard } from "@/components/projects/ProjectCard";
 
+/** Le travail d’abord : placé juste après l’accueil, la première réalisation en pleine largeur. */
 export function RealisationsPreview() {
   return (
-    <section id="realisations" aria-labelledby="realisations-title" className="bg-paper py-24 lg:py-36">
+    <section id="realisations" aria-labelledby="realisations-title" className="bg-paper pb-24 pt-14 lg:pb-36 lg:pt-20">
       <div className="container-x">
-        <SectionHeader
-          label="Réalisations"
-          titleId="realisations-title"
-          title="Des sites pensés pour chaque métier."
-          intro="Commerces de proximité, restaurants, services, professionnels : chaque projet part d’une situation concrète et d’un problème précis à résoudre."
-        />
+        <div className="flex items-end justify-between gap-6 border-b border-night/80 pb-5">
+          <h2 id="realisations-title" className="t-h3 flex items-start gap-2">
+            Réalisations
+            <span className="font-sans text-[0.8rem] font-semibold tabular-nums text-gold-deep">
+              ({String(realisations.length).padStart(2, "0")})
+            </span>
+          </h2>
+          <Link href="/realisations" className="link-u t-label">
+            Toutes les réalisations
+          </Link>
+        </div>
 
-        <ul className="mt-16 grid gap-px border border-night/15 bg-night/15 sm:grid-cols-2 lg:mt-24 lg:grid-cols-3">
-          {realisations.map((item, i) => (
-            <li key={item.slug} className="flex flex-col bg-paper p-7 sm:p-8">
-              <span aria-hidden="true" className="font-serif text-[1.6rem] leading-none text-gold-deep">
-                {String(i + 1).padStart(2, "0")}
-              </span>
-              <p className="t-label mt-5 text-ink-soft">{item.sector}</p>
-              <h3 className="t-h3 mt-2">
-                <Txt>{item.client}</Txt>
-              </h3>
-              <p className="t-small mt-4 text-ink-soft">
-                <Txt>{item.solution}</Txt>
-              </p>
+        <ul className="mt-10 grid gap-x-8 gap-y-16 lg:mt-12 lg:grid-cols-2 lg:gap-y-20">
+          {realisations.map((project, i) => (
+            <li key={project.slug} className={i === 0 ? "lg:col-span-2" : undefined}>
+              <ProjectCard project={project} index={i} featured={i === 0} priority={i === 0} />
             </li>
           ))}
-          <li className="flex flex-col justify-end bg-night p-7 text-paper sm:p-8">
-            <p className="font-serif text-[1.6rem] leading-tight">Avant, problème, solution, résultat : chaque projet en détail.</p>
-            <div className="mt-8">
-              <ButtonLink href="/realisations" tone="dark" variant="secondary">
-                Voir les réalisations
-              </ButtonLink>
-            </div>
-          </li>
         </ul>
       </div>
     </section>

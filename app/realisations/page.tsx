@@ -1,14 +1,13 @@
 import type { Metadata } from "next";
-import Image from "next/image";
 import { realisations } from "@/data/realisations";
 import { PageHeader } from "@/components/ui/PageHeader";
 import { ButtonLink } from "@/components/ui/ButtonLink";
-import { Txt } from "@/components/ui/Txt";
+import { ProjectCard } from "@/components/projects/ProjectCard";
 
 export const metadata: Metadata = {
   title: "Réalisations",
   description:
-    "Sites internet et outils réalisés par Harmony Solutions pour des commerçants, restaurants, artisans et professionnels : situation de départ, problématique, solution et résultat.",
+    "Sites internet et outils réalisés par Harmony Solutions : station de lavage, boulangerie, auto-école, coffee shop, carte de visite digitale.",
   alternates: { canonical: "/realisations" },
   openGraph: { url: "/realisations" },
 };
@@ -18,78 +17,38 @@ export default function RealisationsPage() {
     <>
       <PageHeader
         label="Réalisations"
-        title="Des sites pensés pour des commerces et des professionnels."
-        intro="Chaque fiche suit la même lecture : la situation de départ, le problème à résoudre, la solution livrée et le résultat."
+        title="Des sites pensés pour chaque métier."
+        intro="Commerces de proximité, restaurants, services, professionnels : chaque site part de l’activité du client et de ce que ses clients viennent y chercher."
       />
 
       <section aria-label="Liste des réalisations" className="bg-paper py-20 lg:py-28">
         <div className="container-x">
-          <ol className="space-y-20 lg:space-y-28">
-            {realisations.map((item, index) => (
-              <li key={item.slug}>
-                <article aria-labelledby={`${item.slug}-title`} className="grid gap-10 border-t border-night/80 pt-10 lg:grid-cols-12 lg:gap-10">
-                  <div className="lg:col-span-4">
-                    <span aria-hidden="true" className="font-serif text-[2rem] leading-none text-gold-deep">
-                      {String(index + 1).padStart(2, "0")}
-                    </span>
-                    <p className="t-label mt-5 text-ink-soft">{item.sector}</p>
-                    <h2 id={`${item.slug}-title`} className="t-h3 mt-2">
-                      <Txt>{item.client}</Txt>
-                    </h2>
-                    {item.url ? (
-                      <div className="mt-8">
-                        <ButtonLink href={item.url} newTab variant="secondary" ariaLabel={`Visiter le site (${item.sector}, nouvel onglet)`}>
-                          Visiter le site
-                        </ButtonLink>
-                      </div>
+          <ul className="grid gap-x-8 gap-y-20 lg:grid-cols-2 lg:gap-y-24">
+            {realisations.map((project, i) => {
+              const details = [
+                { label: "Avant", value: project.before },
+                { label: "Problématique", value: project.problem },
+                { label: "Résultat", value: project.result },
+              ].filter((row): row is { label: string; value: string } => Boolean(row.value));
+              return (
+                <li key={project.slug} id={project.slug} className={i === 0 ? "lg:col-span-2" : undefined}>
+                  <ProjectCard project={project} index={i} featured={i === 0} priority={i === 0} headingLevel="h2">
+                    <p className="t-body mt-5 max-w-[60ch] text-ink-soft">{project.solution}</p>
+                    {details.length ? (
+                      <dl className="mt-6 grid gap-x-8 gap-y-5 sm:grid-cols-2">
+                        {details.map((row) => (
+                          <div key={row.label} className="border-t border-night/15 pt-3">
+                            <dt className="t-label text-ink-soft">{row.label}</dt>
+                            <dd className="t-small mt-1.5">{row.value}</dd>
+                          </div>
+                        ))}
+                      </dl>
                     ) : null}
-                  </div>
-
-                  <div className="lg:col-span-8">
-                    <dl className="grid gap-x-10 gap-y-8 sm:grid-cols-2">
-                      {[
-                        { label: "Avant", value: item.before },
-                        { label: "Problématique", value: item.problem },
-                        { label: "Solution", value: item.solution },
-                        { label: "Résultat", value: item.result },
-                      ].map((row) => (
-                        <div key={row.label} className="border-t border-night/15 pt-4">
-                          <dt className="t-label text-ink-soft">{row.label}</dt>
-                          <dd className="t-body mt-2">
-                            <Txt>{row.value}</Txt>
-                          </dd>
-                        </div>
-                      ))}
-                    </dl>
-
-                    {item.image ? (
-                      <figure className="mt-10">
-                        <div className="frame-ticks overflow-hidden border border-night/10">
-                          <Image
-                            src={item.image.src}
-                            alt={item.image.alt}
-                            width={item.image.width}
-                            height={item.image.height}
-                            sizes="(min-width: 1024px) 60vw, 100vw"
-                            className="h-auto w-full"
-                          />
-                        </div>
-                      </figure>
-                    ) : (
-                      <div className="mt-10 flex aspect-[16/7] items-center justify-center border border-dashed border-night/25 bg-mist/60">
-                        <p className="t-small px-6 text-center text-ink-soft">
-                          <span className="todo">
-                            <span className="todo-tag">À compléter</span>
-                            Capture du site livré
-                          </span>
-                        </p>
-                      </div>
-                    )}
-                  </div>
-                </article>
-              </li>
-            ))}
-          </ol>
+                  </ProjectCard>
+                </li>
+              );
+            })}
+          </ul>
         </div>
       </section>
 

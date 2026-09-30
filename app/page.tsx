@@ -16,12 +16,12 @@ export default function HomePage() {
     <>
       <FlowRail items={homeSections} />
       <Hero />
+      <RealisationsPreview />
       <Offers />
       <Tools />
       <Maintenance />
       <Ownership />
       <Method />
-      <RealisationsPreview />
       <Products />
       <About />
       <Contact />
